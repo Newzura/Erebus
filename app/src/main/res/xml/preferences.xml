@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_general"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="pref_mirror_enabled"
+            app:title="@string/pref_mirror_enabled_title"
+            app:summary="@string/pref_mirror_enabled_summary"
+            app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_autostart_aa"
+            app:title="@string/pref_autostart_aa_title"
+            app:summary="@string/pref_autostart_aa_summary"
+            app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_keep_awake"
+            app:title="@string/pref_keep_awake_title"
+            app:summary="@string/pref_keep_awake_summary"
+            app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_stop_on_disconnect"
+            app:title="@string/pref_stop_on_disconnect_title"
+            app:summary="@string/pref_stop_on_disconnect_summary"
+            app:defaultValue="true" />
+
+        <ListPreference
+            app:key="pref_autodim_delay"
+            app:title="@string/pref_autodim_title"
+            app:summary="%s"
+            app:entries="@array/autodim_entries"
+            app:entryValues="@array/autodim_values"
+            app:defaultValue="30" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_force_landscape"
+            app:title="@string/pref_force_landscape_title"
+            app:summary="@string/pref_force_landscape_summary"
+            app:defaultValue="false" />
+
+        <EditTextPreference
+            app:key="pref_auto_launch_pkg"
+            app:title="@string/pref_auto_launch_app_title"
+            app:summary="@string/pref_auto_launch_app_summary"
+            app:dialogTitle="@string/pref_auto_launch_app_title" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_single_app"
+            app:title="@string/pref_single_app_title"
+            app:summary="@string/pref_single_app_summary"
+            app:defaultValue="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_shortcuts"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            app:key="pref_shortcut_1"
+            app:title="@string/pref_shortcut_1_title"
+            app:summary="@string/pref_shortcut_summary_empty"
+            app:dialogTitle="@string/pref_shortcut_1_title" />
+
+        <EditTextPreference
+            app:key="pref_shortcut_2"
+            app:title="@string/pref_shortcut_2_title"
+            app:summary="@string/pref_shortcut_summary_empty"
+            app:dialogTitle="@string/pref_shortcut_2_title" />
+
+        <EditTextPreference
+            app:key="pref_shortcut_3"
+            app:title="@string/pref_shortcut_3_title"
+            app:summary="@string/pref_shortcut_summary_empty"
+            app:dialogTitle="@string/pref_shortcut_3_title" />
+
+        <EditTextPreference
+            app:key="pref_shortcut_4"
+            app:title="@string/pref_shortcut_4_title"
+            app:summary="@string/pref_shortcut_summary_empty"
+            app:dialogTitle="@string/pref_shortcut_4_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_permissions"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="pref_perm_notif"
+            app:title="@string/pref_perm_notif_title"
+            app:summary="@string/pref_perm_notif_summary" />
+
+        <Preference
+            app:key="pref_perm_overlay"
+            app:title="@string/pref_perm_overlay_title"
+            app:summary="@string/pref_perm_overlay_summary" />
+
+        <Preference
+            app:key="pref_perm_accessibility"
+            app:title="@string/pref_perm_accessibility_title"
+            app:summary="@string/pref_perm_accessibility_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_privileged"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="pref_privileged_status"
+            app:title="État de l'accès privilégié"
+            app:summary="Aucun accès privilégié" />
+
+        <ListPreference
+            app:key="pref_privileged_backend"
+            app:title="@string/pref_privileged_backend_title"
+            app:summary="%s"
+            app:entries="@array/backend_entries"
+            app:entryValues="@array/backend_values"
+            app:defaultValue="auto" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_screen_off"
+            app:title="@string/pref_screen_off_title"
+            app:summary="@string/pref_screen_off_summary"
+            app:defaultValue="false" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_real_touch"
+            app:title="@string/pref_real_touch_title"
+            app:summary="@string/pref_real_touch_summary"
+            app:defaultValue="false" />
+
+        <SwitchPreferenceCompat
+            app:key="pref_car_format"
+            app:title="@string/pref_car_format_title"
+            app:summary="@string/pref_car_format_summary"
+            app:defaultValue="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_advanced"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="pref_selfdraw"
+            app:title="@string/pref_selfdraw_title"
+            app:summary="@string/pref_selfdraw_summary"
+            app:defaultValue="false" />
+
+        <EditTextPreference
+            app:key="pref_fixed_size"
+            app:title="@string/pref_fixed_size_title"
+            app:summary="@string/pref_fixed_size_summary"
+            app:dialogTitle="Largeur x Hauteur (ex: 1920x1080)" />
+
+        <EditTextPreference
+            app:key="pref_width_adjust"
+            app:title="@string/pref_width_adjust_title"
+            app:summary="0 px"
+            app:dialogTitle="Ajustement largeur"
+            app:defaultValue="0" />
+
+        <EditTextPreference
+            app:key="pref_height_adjust"
+            app:title="@string/pref_height_adjust_title"
+            app:summary="0 px"
+            app:dialogTitle="Ajustement hauteur"
+            app:defaultValue="0" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_about"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="pref_about_author"
+            app:title="@string/pref_about_author_title"
+            app:summary="@string/about_author_text" />
+
+        <Preference
+            app:key="pref_about_version"
+            app:title="@string/pref_about_version_title"
+            app:summary="@string/pref_about_version_summary" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

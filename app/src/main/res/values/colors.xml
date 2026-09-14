@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="erebus_primary">#0288D1</color>
+    <color name="erebus_primary_dark">#01579B</color>
+    <color name="erebus_accent">#00E5FF</color>
+    <color name="erebus_bg">#0D1117</color>
+    <color name="erebus_surface">#161B22</color>
+    <color name="erebus_card">#21262D</color>
+    <color name="erebus_text_primary">#F0F6FC</color>
+    <color name="erebus_text_secondary">#8B949E</color>
+    <color name="erebus_status_online">#3FB950</color>
+    <color name="erebus_status_warning">#D29922</color>
+    <color name="erebus_status_error">#F85149</color>
+    <color name="erebus_error">#F85149</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

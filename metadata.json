@@ -1,0 +1,6 @@
+{
+  "name": "Erebus",
+  "description": "Erebus - Duplication d'écran vers Android Auto avec proxy média et fonctions privilégiées",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

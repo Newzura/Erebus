@@ -1,0 +1,86 @@
+<resources>
+    <string name="app_name">Erebus</string>
+    <string name="app_description">Duplication d\'écran Android Auto avec proxy média et fonctions privilégiées</string>
+
+    <!-- Statuts et Actions principales -->
+    <string name="start_mirroring">Démarrer le miroir</string>
+    <string name="stop_mirroring">Arrêter le miroir</string>
+    <string name="status_ready">Prêt à dupliquer</string>
+    <string name="status_active">Miroir actif</string>
+    <string name="status_mirroring">Miroir actif</string>
+    <string name="status_stopped">Miroir arrêté</string>
+    <string name="status_aa_connected">Android Auto connecté (%1$d x %2$d)</string>
+    <string name="status_aa_disconnected">Android Auto déconnecté</string>
+
+    <!-- Sections des Préférences -->
+    <string name="pref_cat_general">Général &amp; Miroir</string>
+    <string name="pref_mirror_enabled_title">Activer la duplication</string>
+    <string name="pref_mirror_enabled_summary">Autorise la duplication de l\'écran vers l\'écran de bord Android Auto</string>
+    <string name="pref_autostart_aa_title">Démarrage automatique</string>
+    <string name="pref_autostart_aa_summary">Lancer la projection dès la détection de la surface Android Auto</string>
+    <string name="pref_keep_awake_title">Garder éveillé</string>
+    <string name="pref_keep_awake_summary">Maintient le téléphone actif (WAKE_LOCK) pendant la projection</string>
+    <string name="pref_stop_on_disconnect_title">Arrêt à la déconnexion</string>
+    <string name="pref_stop_on_disconnect_summary">Arrêter le service de capture quand Android Auto est déconnecté</string>
+    <string name="pref_autodim_title">Atténuation automatique (Auto-dim)</string>
+    <string name="pref_autodim_summary">Réduit la luminosité du téléphone après inactivité</string>
+    <string name="pref_force_landscape_title">Forcer paysage au démarrage</string>
+    <string name="pref_force_landscape_summary">Bascule l\'affichage en mode paysage lors du début du miroir</string>
+    <string name="pref_auto_launch_app_title">Application à lancer automatiquement</string>
+    <string name="pref_auto_launch_app_summary">Package de l\'application à ouvrir sur le téléphone au démarrage</string>
+    <string name="pref_single_app_title">Miroir mono-app (SDK 35+)</string>
+    <string name="pref_single_app_summary">Projette uniquement l\'application sélectionnée (LaunchCookie)</string>
+
+    <!-- Raccourcis de lancement -->
+    <string name="pref_cat_shortcuts">Raccourcis de lancement rapide (4)</string>
+    <string name="pref_shortcut_1_title">Raccourci 1</string>
+    <string name="pref_shortcut_2_title">Raccourci 2</string>
+    <string name="pref_shortcut_3_title">Raccourci 3</string>
+    <string name="pref_shortcut_4_title">Raccourci 4</string>
+    <string name="pref_shortcut_summary_empty">Aucune application configurée</string>
+
+    <!-- Permissions -->
+    <string name="pref_cat_permissions">Autorisations système</string>
+    <string name="pref_perm_notif_title">Accès aux notifications &amp; MediaSession</string>
+    <string name="pref_perm_notif_summary">Nécessaire pour le proxy média de contrôle de lecture</string>
+    <string name="pref_perm_overlay_title">Superposition sur les autres applications</string>
+    <string name="pref_perm_overlay_summary">Permet l\'affichage des commandes flottantes et overlays</string>
+    <string name="pref_perm_accessibility_title">Service d\'accessibilité</string>
+    <string name="pref_perm_accessibility_summary">Fallback pour l\'injection de gestes tactiles sans root</string>
+
+    <!-- Fonctions Privilégiées (Shizuku / Root) -->
+    <string name="pref_cat_privileged">Fonctions privilégiées (Shizuku / Root)</string>
+    <string name="pref_privileged_backend_title">Mode privilégié</string>
+    <string name="pref_privileged_backend_summary">Détection automatique Shizuku ou Root (libsu)</string>
+    <string name="pref_screen_off_title">Écran téléphone éteint</string>
+    <string name="pref_screen_off_summary">Éteint la dalle du téléphone pendant la projection (PowerMode)</string>
+    <string name="pref_real_touch_title">Injection tactile réelle</string>
+    <string name="pref_real_touch_summary">Injecte les événements tactiles directs (InputManager)</string>
+    <string name="pref_car_format_title">Adapter l\'écran au format voiture</string>
+    <string name="pref_car_format_summary">Redimensionne l\'affichage physique pour supprimer les bandes noires (restauration auto)</string>
+
+    <!-- Section Avancé -->
+    <string name="pref_cat_advanced">Paramètres avancés d\'affichage</string>
+    <string name="pref_selfdraw_title">Mode rendu direct (Selfdraw)</string>
+    <string name="pref_selfdraw_summary">Optimise le pipeline de rendu sur la surface du véhicule</string>
+    <string name="pref_fixed_size_title">Résolution fixe personnalisée</string>
+    <string name="pref_fixed_size_summary">Imposer une résolution au lieu d\'utiliser la géométrie native AA</string>
+    <string name="pref_width_adjust_title">Ajustement largeur (pixels)</string>
+    <string name="pref_height_adjust_title">Ajustement hauteur (pixels)</string>
+
+    <!-- À propos -->
+    <string name="pref_cat_about">À propos</string>
+    <string name="pref_about_author_title">Auteur</string>
+    <string name="about_author_text">Erebus par newzura, 2026</string>
+    <string name="pref_about_version_title">Version</string>
+    <string name="pref_about_version_summary">1.0.0 (Build 2026)</string>
+
+    <!-- Services et Notifications -->
+    <string name="notification_channel_capture">Capture d\'écran Erebus</string>
+    <string name="notification_channel_capture_desc">Notification permanente pendant le mirroring vers Android Auto</string>
+    <string name="notification_capture_title">Erebus est actif</string>
+    <string name="notification_capture_text">Duplication de l\'écran vers Android Auto en cours</string>
+    <string name="action_stop">Arrêter</string>
+    <string name="accessibility_service_label">Erebus Injection Tactile</string>
+    <string name="accessibility_service_description">Permet d\'émuler les gestes tactiles reçus depuis l\'écran d\'Android Auto.</string>
+</resources>
