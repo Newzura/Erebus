@@ -12,6 +12,7 @@ import androidx.car.app.model.Action
 import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.Template
 import androidx.car.app.navigation.model.NavigationTemplate
+import androidx.preference.PreferenceManager
 
 class ErebusCarScreen(carContext: CarContext) : Screen(carContext), SurfaceCallback {
 
@@ -62,6 +63,8 @@ class ErebusCarScreen(carContext: CarContext) : Screen(carContext), SurfaceCallb
 
         Log.i(TAG, "M1: onSurfaceAvailable reçu - Dimensions: ${surfaceWidth}x${surfaceHeight}, DPI: $surfaceDpi, Surface: $currentCarSurface")
 
+        ProjectionCoordinator.setCarSurfaceAvailable(true, surfaceWidth, surfaceHeight)
+
         // Notifier ScreenCaptureService de la disponibilité de la surface
         surfaceContainer.surface?.let { surf ->
             ScreenCaptureService.onSurfaceAvailable(
@@ -71,6 +74,21 @@ class ErebusCarScreen(carContext: CarContext) : Screen(carContext), SurfaceCallb
                 surfaceHeight,
                 surfaceDpi
             )
+        }
+
+        // Vérification des conditions de démarrage automatisé du miroir
+        // 1. MediaProjection inactif
+        // 2. Auto-start activé (pref_autostart_aa)
+        // 3. Aucune demande en cours ou effectuée pour cette session
+        val isMediaProjectionInactive = !ProjectionCoordinator.mediaProjectionActive.value && !ScreenCaptureService.isServiceRunning
+        val prefs = PreferenceManager.getDefaultSharedPreferences(carContext)
+        val isAutoStartEnabled = prefs.getBoolean("pref_autostart_aa", true)
+        val hasRequested = ProjectionCoordinator.hasRequestedConsentForSession.value
+        val isDenied = ProjectionCoordinator.consentDeniedForSession.value
+
+        if (isMediaProjectionInactive && isAutoStartEnabled && !hasRequested && !isDenied) {
+            Log.i(TAG, "M1: Conditions auto-start validées — affichage notification haute priorité 'Erebus prêt'")
+            ProjectionCoordinator.postReadyNotification(carContext)
         }
     }
 
@@ -86,6 +104,10 @@ class ErebusCarScreen(carContext: CarContext) : Screen(carContext), SurfaceCallb
         Log.i(TAG, "M1/M2: onSurfaceDestroyed reçu")
         isSurfaceReady = false
         currentCarSurface = null
+
+        // Annuler la notification 'Erebus prêt' et mettre à jour le coordinateur
+        ProjectionCoordinator.cancelReadyNotification(carContext)
+        ProjectionCoordinator.setCarSurfaceAvailable(false, context = carContext)
 
         // Libérer le VirtualDisplay immédiatement
         ScreenCaptureService.onSurfaceDestroyed()

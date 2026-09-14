@@ -116,9 +116,20 @@ class ScreenCaptureService : Service() {
     }
 
     private var mediaProjectionManager: MediaProjectionManager? = null
+    private var displayManager: DisplayManager? = null
     private var mediaProjection: MediaProjection? = null
     private var virtualDisplay: VirtualDisplay? = null
     private var wakeLock: PowerManager.WakeLock? = null
+
+    private val displayListener = object : DisplayManager.DisplayListener {
+        override fun onDisplayAdded(displayId: Int) {}
+        override fun onDisplayRemoved(displayId: Int) {}
+        override fun onDisplayChanged(displayId: Int) {
+            if (displayId == Display.DEFAULT_DISPLAY) {
+                handleDisplayMetricsChanged()
+            }
+        }
+    }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -128,6 +139,8 @@ class ScreenCaptureService : Service() {
         isServiceRunning = true
         createNotificationChannel()
         mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        displayManager?.registerDisplayListener(displayListener, null)
         Log.i(TAG, "ScreenCaptureService créé")
     }
 
@@ -137,6 +150,7 @@ class ScreenCaptureService : Service() {
         when (action) {
             ACTION_STOP -> {
                 Log.i(TAG, "ScreenCaptureService: arrêt demandé")
+                ProjectionCoordinator.onCaptureStopped(this)
                 stopCapture()
                 stopSelf()
                 return START_NOT_STICKY
@@ -179,6 +193,9 @@ class ScreenCaptureService : Service() {
     }
 
     private fun startForegroundNotification() {
+        // S'assurer que la notification de demande de connexion 'Erebus prêt' est annulée
+        ProjectionCoordinator.cancelReadyNotification(this)
+
         val stopIntent = Intent(this, ScreenCaptureService::class.java).apply {
             action = ACTION_STOP
         }
@@ -189,11 +206,24 @@ class ScreenCaptureService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val mainIntent = Intent(this, MainActivity::class.java)
+        val mainIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
         val mainPendingIntent = PendingIntent.getActivity(
             this,
             0,
             mainIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val settingsIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            putExtra("extra_open_settings", true)
+        }
+        val settingsPendingIntent = PendingIntent.getActivity(
+            this,
+            1,
+            settingsIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -203,6 +233,7 @@ class ScreenCaptureService : Service() {
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(mainPendingIntent)
             .addAction(R.drawable.ic_launcher_foreground, getString(R.string.action_stop), stopPendingIntent)
+            .addAction(R.drawable.ic_launcher_foreground, getString(R.string.action_settings), settingsPendingIntent)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
@@ -246,6 +277,8 @@ class ScreenCaptureService : Service() {
     private fun initMediaProjection(resultCode: Int, data: Intent?) {
         if (resultCode == 0 || data == null) {
             Log.e(TAG, "M2: ResultCode ou intent null, impossible d'initialiser MediaProjection")
+            ProjectionCoordinator.setMediaProjectionActive(false)
+            ProjectionCoordinator.setMirroringActive(false)
             stopSelf()
             return
         }
@@ -256,14 +289,20 @@ class ScreenCaptureService : Service() {
 
             if (mediaProjection == null) {
                 Log.e(TAG, "M2: getMediaProjection a retourné null -> stopSelf")
+                ProjectionCoordinator.setMediaProjectionActive(false)
+                ProjectionCoordinator.setMirroringActive(false)
                 stopSelf()
                 return
             }
+
+            ProjectionCoordinator.setMediaProjectionActive(true)
 
             mediaProjection?.registerCallback(object : MediaProjection.Callback() {
                 override fun onStop() {
                     super.onStop()
                     Log.i(TAG, "M2: MediaProjection callback onStop reçu")
+                    ProjectionCoordinator.setMediaProjectionActive(false)
+                    ProjectionCoordinator.setMirroringActive(false)
                     releaseVirtualDisplay()
                     stopSelf()
                 }
@@ -273,25 +312,38 @@ class ScreenCaptureService : Service() {
             setupVirtualDisplay()
         } catch (e: Exception) {
             Log.e(TAG, "M2: Échec initialisation MediaProjection", e)
+            ProjectionCoordinator.setMediaProjectionActive(false)
+            ProjectionCoordinator.setMirroringActive(false)
             stopSelf()
         }
+    }
+
+    private fun handleDisplayMetricsChanged() {
+        val surface = activeSurface ?: ErebusCarScreen.currentCarSurface
+        if (surface == null || !surface.isValid || mediaProjection == null) {
+            return
+        }
+        Log.i(TAG, "ScreenCaptureService: Modification géométrie / rotation détectée sur l'écran source")
+        setupVirtualDisplay()
     }
 
     private fun setupVirtualDisplay() {
         val surface = activeSurface ?: ErebusCarScreen.currentCarSurface
         if (surface == null || !surface.isValid) {
             Log.w(TAG, "M2: Surface AA non disponible ou invalide, attente de onSurfaceAvailable")
+            ProjectionCoordinator.setMirroringActive(false)
             return
         }
 
         val mp = mediaProjection
         if (mp == null) {
             Log.w(TAG, "M2: MediaProjection null, attente du token")
+            ProjectionCoordinator.setMirroringActive(false)
             return
         }
 
         // Déterminer dimensions et DPI par défaut depuis DisplayManager
-        val dm = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        val dm = displayManager ?: (getSystemService(Context.DISPLAY_SERVICE) as DisplayManager)
         val defaultDisplay = dm.getDisplay(Display.DEFAULT_DISPLAY)
         val defaultSize = Point()
         val defaultMetrics = DisplayMetrics()
@@ -299,9 +351,12 @@ class ScreenCaptureService : Service() {
         defaultDisplay.getRealMetrics(defaultMetrics)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val renderMode = prefs.getString("pref_render_mode", "fit") ?: "fit"
         val widthAdjust = prefs.getString("pref_width_adjust", "0")?.toIntOrNull() ?: 0
         val heightAdjust = prefs.getString("pref_height_adjust", "0")?.toIntOrNull() ?: 0
         val fixedSize = prefs.getString("pref_fixed_size", "") ?: ""
+
+        Log.i(TAG, "M2: Mode de rendu configuré: $renderMode (Fit par défaut : ratio préservé sans étirement)")
 
         var targetWidth = if (surfaceWidth > 0) surfaceWidth else defaultSize.x
         var targetHeight = if (surfaceHeight > 0) surfaceHeight else defaultSize.y
@@ -321,12 +376,24 @@ class ScreenCaptureService : Service() {
         targetWidth = (targetWidth + widthAdjust).coerceAtLeast(320)
         targetHeight = (targetHeight + heightAdjust).coerceAtLeast(240)
 
+        // Réutiliser et redimensionner le VirtualDisplay s'il existe déjà
+        if (virtualDisplay != null) {
+            try {
+                virtualDisplay?.resize(targetWidth, targetHeight, targetDpi)
+                virtualDisplay?.setSurface(surface)
+                ProjectionCoordinator.setMirroringActive(true)
+                Log.i(TAG, "M2: VirtualDisplay redimensionné avec succès ($targetWidth x $targetHeight, DPI=$targetDpi)")
+                return
+            } catch (e: Exception) {
+                Log.w(TAG, "M2: Impossible de redimensionner le VirtualDisplay existant, réinitialisation", e)
+                virtualDisplay?.release()
+                virtualDisplay = null
+            }
+        }
+
         Log.i(TAG, "M2: Création VirtualDisplay ($targetWidth x $targetHeight, DPI=$targetDpi) sur surface=$surface")
 
         try {
-            virtualDisplay?.release()
-            virtualDisplay = null
-
             val flags = DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR or
                     DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION
 
@@ -342,6 +409,7 @@ class ScreenCaptureService : Service() {
             )
 
             Log.i(TAG, "M2: VirtualDisplay créé avec succès: $virtualDisplay")
+            ProjectionCoordinator.setMirroringActive(true)
 
             // Si écran off demandé avec backend privilégié
             if (prefs.getBoolean("pref_screen_off", false)) {
@@ -353,10 +421,12 @@ class ScreenCaptureService : Service() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "M2: Erreur lors de createVirtualDisplay", e)
+            ProjectionCoordinator.setMirroringActive(false)
         }
     }
 
     fun releaseVirtualDisplay() {
+        ProjectionCoordinator.setMirroringActive(false)
         try {
             virtualDisplay?.release()
             Log.i(TAG, "M2: VirtualDisplay libéré proprement")
@@ -367,6 +437,7 @@ class ScreenCaptureService : Service() {
     }
 
     private fun stopCapture() {
+        ProjectionCoordinator.onCaptureStopped(this)
         releaseVirtualDisplay()
         try {
             mediaProjection?.stop()
@@ -388,6 +459,8 @@ class ScreenCaptureService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        displayManager?.unregisterDisplayListener(displayListener)
+        ProjectionCoordinator.onCaptureStopped(this)
         stopCapture()
         instance = null
         isServiceRunning = false

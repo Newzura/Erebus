@@ -10,11 +10,18 @@ import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
+
+        // Paysage automatique
+        findPreference<SwitchPreferenceCompat>("pref_force_landscape")?.setOnPreferenceChangeListener { _, newValue ->
+            ProjectionCoordinator.setForceLandscapePreference(newValue as? Boolean ?: true)
+            true
+        }
 
         // Permission Notifications / MediaSession
         findPreference<Preference>("pref_perm_notif")?.setOnPreferenceClickListener {

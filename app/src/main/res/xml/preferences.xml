@@ -41,8 +41,17 @@
         <SwitchPreferenceCompat
             app:key="pref_force_landscape"
             app:title="@string/pref_force_landscape_title"
-            app:summary="@string/pref_force_landscape_summary"
-            app:defaultValue="false" />
+            app:summaryOn="@string/pref_force_landscape_summary_on"
+            app:summaryOff="@string/pref_force_landscape_summary_off"
+            app:defaultValue="true" />
+
+        <ListPreference
+            app:key="pref_render_mode"
+            app:title="@string/pref_render_mode_title"
+            app:summary="@string/pref_render_mode_summary"
+            app:entries="@array/render_mode_entries"
+            app:entryValues="@array/render_mode_values"
+            app:defaultValue="fit" />
 
         <EditTextPreference
             app:key="pref_auto_launch_pkg"

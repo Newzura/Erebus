@@ -27,4 +27,15 @@
         <item>root</item>
         <item>none</item>
     </string-array>
+
+    <string-array name="render_mode_entries">
+        <item>Ajuster / Proportions conservées (Fit)</item>
+        <item>Remplir avec recadrage (Fill) [À venir]</item>
+        <item>Étirer sans bordures (Stretch) [À venir]</item>
+    </string-array>
+    <string-array name="render_mode_values">
+        <item>fit</item>
+        <item>fill</item>
+        <item>stretch</item>
+    </string-array>
 </resources>

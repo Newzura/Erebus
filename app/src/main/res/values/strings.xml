@@ -24,8 +24,12 @@
     <string name="pref_stop_on_disconnect_summary">Arrêter le service de capture quand Android Auto est déconnecté</string>
     <string name="pref_autodim_title">Atténuation automatique (Auto-dim)</string>
     <string name="pref_autodim_summary">Réduit la luminosité du téléphone après inactivité</string>
-    <string name="pref_force_landscape_title">Forcer paysage au démarrage</string>
-    <string name="pref_force_landscape_summary">Bascule l\'affichage en mode paysage lors du début du miroir</string>
+    <string name="pref_force_landscape_title">Paysage automatique avec Android Auto</string>
+    <string name="pref_force_landscape_summary">Passe le téléphone en paysage pendant une projection Erebus active.</string>
+    <string name="pref_force_landscape_summary_on">Passe le téléphone en paysage pendant une projection Erebus active.</string>
+    <string name="pref_force_landscape_summary_off">Ne pas modifier l’orientation</string>
+    <string name="pref_render_mode_title">Mode de rendu d’affichage</string>
+    <string name="pref_render_mode_summary">Ajuster (Fit) : conserve le ratio sans déformation avec bandes noires si nécessaire</string>
     <string name="pref_auto_launch_app_title">Application à lancer automatiquement</string>
     <string name="pref_auto_launch_app_summary">Package de l\'application à ouvrir sur le téléphone au démarrage</string>
     <string name="pref_single_app_title">Miroir mono-app (SDK 35+)</string>
@@ -75,12 +79,28 @@
     <string name="pref_about_version_title">Version</string>
     <string name="pref_about_version_summary">1.0.0 (Build 2026)</string>
 
+    <!-- États techniques détaillés -->
+    <string name="tech_status_aa_connected">Android Auto : Connecté</string>
+    <string name="tech_status_aa_disconnected">Android Auto : Déconnecté</string>
+    <string name="tech_status_surface_available">Surface voiture : Disponible (%1$d x %2$d)</string>
+    <string name="tech_status_surface_unavailable">Surface voiture : Indisponible</string>
+    <string name="tech_status_capture_active">Capture écran : Active</string>
+    <string name="tech_status_capture_inactive">Capture écran : Inactive</string>
+    <string name="tech_status_orientation_landscape">Orientation Erebus : Automatique paysage</string>
+    <string name="tech_status_orientation_system">Orientation Erebus : Système</string>
+
     <!-- Services et Notifications -->
     <string name="notification_channel_capture">Capture d\'écran Erebus</string>
     <string name="notification_channel_capture_desc">Notification permanente pendant le mirroring vers Android Auto</string>
-    <string name="notification_capture_title">Erebus est actif</string>
+    <string name="notification_capture_title">Erebus — miroir actif</string>
     <string name="notification_capture_text">Duplication de l\'écran vers Android Auto en cours</string>
+    <string name="notification_channel_ready">Erebus prêt</string>
+    <string name="notification_channel_ready_desc">Notification lorsque Android Auto est prêt pour le miroir</string>
+    <string name="notification_ready_title">Erebus prêt</string>
+    <string name="notification_ready_text">Android Auto est connecté — toucher pour partager l’écran</string>
     <string name="action_stop">Arrêter</string>
-    <string name="accessibility_service_label">Erebus Injection Tactile</string>
-    <string name="accessibility_service_description">Permet d\'émuler les gestes tactiles reçus depuis l\'écran d\'Android Auto.</string>
+    <string name="action_settings">Réglages</string>
+    <string name="status_sharing_denied">Partage non autorisé</string>
+    <string name="accessibility_service_label">Erebus Accessibilité</string>
+    <string name="accessibility_service_description">Permet d\'automatiser la validation de projection et d\'émuler les gestes tactiles reçus depuis l\'écran d\'Android Auto.</string>
 </resources>
