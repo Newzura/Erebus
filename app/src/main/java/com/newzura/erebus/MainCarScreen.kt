@@ -56,12 +56,9 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
                 .setTitle("Paramètres")
                 .addText("Configuration de l'application")
                 .setOnClickListener {
-                    carContext.startActivity(
-                        carContext.createIntentBuilder(
-                            carContext.packageContext,
-                            com.newzura.erebus.settings.SettingsActivity::class.java
-                        ).build()
-                    )
+                    val intent = Intent(carContext, com.newzura.erebus.settings.SettingsActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    carContext.startActivity(intent)
                 }
                 .build()
         )
