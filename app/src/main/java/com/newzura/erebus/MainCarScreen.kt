@@ -7,16 +7,6 @@ import androidx.car.app.model.*
 import androidx.car.app.validation.HostValidator
 import com.newzura.erebus.data.BrowserPreferences
 
-class MainCarSession : Session() {
-    override fun onCreateScreen(intent: Intent): Screen {
-        val action = intent.action ?: CAR_APP_NAVIGATION_DEFAULT_ACTION
-        return when (action) {
-            CAR_APP_NAVIGATION_DEFAULT_ACTION -> MainCarScreen(carContext)
-            else -> MainCarScreen(carContext)
-        }
-    }
-}
-
 class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
 
     override fun onGetTemplate(): Template {
