@@ -46,6 +46,8 @@ object BrowserPreferences {
     private const val KEY_START_PAGE_SLOTS = "start_page_slots"
     private const val KEY_START_PAGE_BACKGROUND_URI = "start_page_background_uri"
     private const val KEY_HOME_PAGE_URL = "home_page_url"
+    private const val KEY_JELLYFIN_URL = "pref_jellyfin_url"
+    private const val DEFAULT_JELLYFIN_URL = "http://192.168.1.100:8096"
     private const val KEY_ALLOWED_LOCATION_HOSTS = "allowed_location_hosts"
     private const val KEY_HIDE_SPONSORS = "hide_sponsors"
     private const val DEFAULT_URL = "https://www.google.com"
@@ -372,6 +374,18 @@ object BrowserPreferences {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .remove(KEY_HOME_PAGE_URL)
+            .apply()
+    }
+
+    fun getJellyfinUrl(context: Context): String {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getString(KEY_JELLYFIN_URL, DEFAULT_JELLYFIN_URL) ?: DEFAULT_JELLYFIN_URL
+    }
+
+    fun setJellyfinUrl(context: Context, url: String) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putString(KEY_JELLYFIN_URL, url.trim())
             .apply()
     }
 

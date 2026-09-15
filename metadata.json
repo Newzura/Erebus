@@ -1,5 +1,6 @@
 {
   "name": "Erebus",
-  "description": "Erebus - Duplication d'écran vers Android Auto avec proxy média et fonctions privilégiées",
+  "description": "Navigateur Web pour Android Auto avec gestion des onglets, favoris et affichage optimisé pour véhicule.",
   "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

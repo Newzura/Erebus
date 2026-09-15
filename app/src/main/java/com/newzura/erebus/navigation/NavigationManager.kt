@@ -34,6 +34,10 @@ class NavigationManager(
     }
 
     fun extractBrowsableUrl(intent: Intent?): String? {
+        val extraUrl = intent?.getStringExtra("URL_TO_OPEN")?.trim()
+        if (!extraUrl.isNullOrEmpty() && (extraUrl.startsWith("http://") || extraUrl.startsWith("https://") || extraUrl.startsWith("chrome://") || extraUrl == "about:blank")) {
+            return extraUrl
+        }
         val data = intent?.data
         if (data == null) {
             return null
