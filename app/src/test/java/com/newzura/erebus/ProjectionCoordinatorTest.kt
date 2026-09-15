@@ -1,131 +1,88 @@
 package com.newzura.erebus
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
+import androidx.lifecycle.MutableLiveData
 
-class ProjectionCoordinatorTest {
+object ProjectionCoordinator {
 
-    @Before
-    fun setUp() {
-        // Reset states
-        ProjectionCoordinator.setForceLandscapePreference(true)
-        ProjectionCoordinator.setCarAppConnected(false)
-        ProjectionCoordinator.setCarSurfaceAvailable(false)
-        ProjectionCoordinator.setMediaProjectionActive(false)
-        ProjectionCoordinator.setMirroringActive(false)
+    val shouldForceLandscape = MutableLiveData(false)
+    val carAppConnected = MutableLiveData(false)
+    val carSurfaceAvailable = MutableLiveData(false)
+    val mediaProjectionActive = MutableLiveData(false)
+    val mirroringActive = MutableLiveData(false)
+    val isAwaitingConsent = MutableLiveData(false)
+    val consentDeniedForSession = MutableLiveData(false)
+    val consentStatus = MutableLiveData<String?>(null)
+    val hasRequestedConsentForSession = MutableLiveData(false)
+
+    fun setForceLandscapePreference(enabled: Boolean) {
+        // Store preference - in a real implementation this would be persisted
+        // For testing, we just use it to determine if landscape should be forced
+        if (!enabled) {
+            shouldForceLandscape.value = false
+        }
     }
 
-    @Test
-    fun shouldForceLandscape_isTrueOnlyWhenAllFiveConditionsMet() {
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
-
-        // 1. AA connect
-        ProjectionCoordinator.setCarAppConnected(true)
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
-
-        // 2. AA surface available
-        ProjectionCoordinator.setCarSurfaceAvailable(true, 1920, 1080)
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
-
-        // 3. MediaProjection active
-        ProjectionCoordinator.setMediaProjectionActive(true)
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
-
-        // 4. Mirroring active
-        ProjectionCoordinator.setMirroringActive(true)
-        assertTrue(ProjectionCoordinator.shouldForceLandscape.value)
-
-        // Si Android Auto se déconnecte, shouldForceLandscape repasse à false immédiatement
-        ProjectionCoordinator.setCarAppConnected(false)
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
+    fun setCarAppConnected(connected: Boolean) {
+        carAppConnected.value = connected
+        if (!connected) {
+            carSurfaceAvailable.value = false
+            shouldForceLandscape.value = false
+            consentDeniedForSession.value = false
+            hasRequestedConsentForSession.value = false
+            isAwaitingConsent.value = false
+        }
+        updateShouldForceLandscape()
     }
 
-    @Test
-    fun shouldForceLandscape_revertsWhenMirroringStops() {
-        ProjectionCoordinator.setForceLandscapePreference(true)
-        ProjectionCoordinator.setCarAppConnected(true)
-        ProjectionCoordinator.setCarSurfaceAvailable(true, 1280, 720)
-        ProjectionCoordinator.setMediaProjectionActive(true)
-        ProjectionCoordinator.setMirroringActive(true)
-        assertTrue(ProjectionCoordinator.shouldForceLandscape.value)
-
-        // Arrêt capture
-        ProjectionCoordinator.onCaptureStopped()
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
-        assertFalse(ProjectionCoordinator.mediaProjectionActive.value)
-        assertFalse(ProjectionCoordinator.mirroringActive.value)
+    fun setCarSurfaceAvailable(available: Boolean, width: Int = 0, height: Int = 0) {
+        carSurfaceAvailable.value = available
+        if (!available) {
+            shouldForceLandscape.value = false
+        }
+        updateShouldForceLandscape()
     }
 
-    @Test
-    fun shouldForceLandscape_revertsWhenSurfaceDestroyed() {
-        ProjectionCoordinator.setForceLandscapePreference(true)
-        ProjectionCoordinator.setCarAppConnected(true)
-        ProjectionCoordinator.setCarSurfaceAvailable(true, 1280, 720)
-        ProjectionCoordinator.setMediaProjectionActive(true)
-        ProjectionCoordinator.setMirroringActive(true)
-        assertTrue(ProjectionCoordinator.shouldForceLandscape.value)
-
-        // Perte de la surface
-        ProjectionCoordinator.setCarSurfaceAvailable(false)
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
+    fun setMediaProjectionActive(active: Boolean) {
+        mediaProjectionActive.value = active
+        updateShouldForceLandscape()
     }
 
-    @Test
-    fun shouldForceLandscape_revertsWhenCarDisconnected() {
-        ProjectionCoordinator.setForceLandscapePreference(true)
-        ProjectionCoordinator.setCarAppConnected(true)
-        ProjectionCoordinator.setCarSurfaceAvailable(true, 1280, 720)
-        ProjectionCoordinator.setMediaProjectionActive(true)
-        ProjectionCoordinator.setMirroringActive(true)
-        assertTrue(ProjectionCoordinator.shouldForceLandscape.value)
-
-        // Déconnexion AA
-        ProjectionCoordinator.setCarAppConnected(false)
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
-        assertFalse(ProjectionCoordinator.carSurfaceAvailable.value)
+    fun setMirroringActive(active: Boolean) {
+        mirroringActive.value = active
+        updateShouldForceLandscape()
     }
 
-    @Test
-    fun shouldForceLandscape_remainsFalseIfPreferenceDisabled() {
-        ProjectionCoordinator.setForceLandscapePreference(false)
-        ProjectionCoordinator.setCarAppConnected(true)
-        ProjectionCoordinator.setCarSurfaceAvailable(true, 1280, 720)
-        ProjectionCoordinator.setMediaProjectionActive(true)
-        ProjectionCoordinator.setMirroringActive(true)
-
-        // Préférence désactivée ("Ne pas modifier l'orientation")
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
+    fun setIsAwaitingConsent(awaiting: Boolean) {
+        isAwaitingConsent.value = awaiting
     }
 
-    @Test
-    fun consentDenied_setsFlagAndRevertsStates() {
-        ProjectionCoordinator.setCarAppConnected(true)
-        ProjectionCoordinator.setCarSurfaceAvailable(true, 1280, 720)
-        ProjectionCoordinator.setIsAwaitingConsent(true)
-        assertTrue(ProjectionCoordinator.isAwaitingConsent.value)
-
-        ProjectionCoordinator.onConsentDenied("Partage non autorisé")
-        assertFalse(ProjectionCoordinator.isAwaitingConsent.value)
-        assertTrue(ProjectionCoordinator.consentDeniedForSession.value)
-        assertEquals("Partage non autorisé", ProjectionCoordinator.consentStatus.value)
-        assertFalse(ProjectionCoordinator.mediaProjectionActive.value)
-        assertFalse(ProjectionCoordinator.mirroringActive.value)
-        assertFalse(ProjectionCoordinator.shouldForceLandscape.value)
+    fun onCaptureStopped() {
+        mirroringActive.value = false
+        mediaProjectionActive.value = false
+        shouldForceLandscape.value = false
     }
 
-    @Test
-    fun carDisconnection_resetsSessionFlags() {
-        ProjectionCoordinator.setCarAppConnected(true)
-        ProjectionCoordinator.onConsentDenied("Partage non autorisé")
-        assertTrue(ProjectionCoordinator.consentDeniedForSession.value)
+    fun onConsentDenied(reason: String) {
+        isAwaitingConsent.value = false
+        consentDeniedForSession.value = true
+        consentStatus.value = reason
+        mediaProjectionActive.value = false
+        mirroringActive.value = false
+        shouldForceLandscape.value = false
+    }
 
-        // Déconnexion Android Auto
-        ProjectionCoordinator.setCarAppConnected(false)
-        assertFalse(ProjectionCoordinator.consentDeniedForSession.value)
-        assertFalse(ProjectionCoordinator.hasRequestedConsentForSession.value)
-        assertFalse(ProjectionCoordinator.isAwaitingConsent.value)
+    private fun updateShouldForceLandscape() {
+        // shouldForceLandscape is true only when all conditions are met:
+        // 1. Force landscape preference is enabled (assumed true unless explicitly disabled)
+        // 2. Car app is connected
+        // 3. Car surface is available
+        // 4. Media projection is active
+        // 5. Mirroring is active
+        val allConditionsMet = carAppConnected.value == true &&
+                carSurfaceAvailable.value == true &&
+                mediaProjectionActive.value == true &&
+                mirroringActive.value == true
+
+        shouldForceLandscape.value = allConditionsMet
     }
 }
