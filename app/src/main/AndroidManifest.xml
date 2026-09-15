@@ -36,7 +36,7 @@
         
         <uses-library
             android:name="android.auto"
-            android:required="true" />
+            android:required="false" />
         
         <meta-data
             android:name="com.google.android.gms.car.application"
