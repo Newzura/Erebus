@@ -78,6 +78,7 @@ dependencies {
   implementation("com.google.android.material:material:1.14.0")
   implementation("androidx.recyclerview:recyclerview:1.3.2")
   implementation(libs.androidx.car.app)
+  implementation(libs.androidx.media)
   implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.14")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
   implementation("com.google.android.gms:play-services-oss-licenses:17.1.0")
