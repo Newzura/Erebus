@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.model.*
-import androidx.car.app.validation.HostValidator
 import com.newzura.erebus.data.BrowserPreferences
 
 class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
@@ -18,7 +17,7 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
             val title = getBookmarkTitle(url)
             listBuilder.addItem(
                 Row.Builder()
-                    .setTitle(title.ifEmpty { url })
+                    .setTitle(title.ifEmpty { "Site Web" })
                     .addText(url)
                     .setOnClickListener {
                         launchBrowser(url)
@@ -34,7 +33,17 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
                     .setTitle("Ouvrir le navigateur")
                     .addText("Démarrer la navigation web")
                     .setOnClickListener {
-                        launchBrowser("about:blank")
+                        launchBrowser("https://www.google.com")
+                    }
+                    .build()
+            )
+            
+            listBuilder.addItem(
+                Row.Builder()
+                    .setTitle("YouTube")
+                    .addText("Accéder à YouTube")
+                    .setOnClickListener {
+                        launchBrowser("https://youtube.com")
                     }
                     .build()
             )
@@ -44,7 +53,7 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
                     .setTitle("Page de démarrage")
                     .addText("Afficher la page de démarrage")
                     .setOnClickListener {
-                        launchBrowser("chrome://newtab")
+                        launchBrowser("https://www.google.com")
                     }
                     .build()
             )
@@ -65,7 +74,7 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
         
         return ListTemplate.Builder()
             .setTitle("Erebus Browser")
-            .setHeaderAction(Action.BACK)
+            .setHeaderAction(Action.APP_ICON)
             .setSingleList(listBuilder.build())
             .build()
     }
