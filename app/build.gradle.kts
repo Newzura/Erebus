@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-  namespace = "fr.thomas.erebus"
+  namespace = "com.newzura.erebus"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
   defaultConfig {
-    applicationId = "fr.thomas.erebus"
+    applicationId = "com.newzura.erebus"
     minSdk = 26
     targetSdk = 36
     versionCode = 8
