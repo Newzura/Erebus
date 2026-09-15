@@ -34,6 +34,10 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Erebus">
         
+        <uses-library
+            android:name="android.auto"
+            android:required="true" />
+        
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
