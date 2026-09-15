@@ -70,12 +70,13 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
                 .build()
         )
         
-        Log.d("ErebusCar", "Building template with ${listBuilder.build().itemCount} items")
+        val itemList = listBuilder.build()
+        Log.d("ErebusCar", "Building template with ${itemList.size} items")
         
         return ListTemplate.Builder()
             .setTitle("Erebus Browser")
             .setHeaderAction(Action.APP_ICON)
-            .setSingleList(listBuilder.build())
+            .setSingleList(itemList)
             .build()
     }
     
