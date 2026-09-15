@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <!-- Nécessaire pour Android 13+ si on scanne le Wi-Fi, mais ici on se connecte juste -->
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation"/>
     <uses-permission android:name="androidx.car.app.ACCESS_SURFACE" />
     <uses-permission android:name="androidx.car.app.MAP_TEMPLATES" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -25,17 +29,14 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Erebus">
         <meta-data
-            android:name="distractionOptimized"
-            android:value="true" />
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="4.0" />
-        <meta-data
             android:name="androidx.car.app.minCarApiLevel"
             android:value="7" />
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
+        <meta-data
+            android:name="androidx.car.app.NEEDS_UPDATE_IN_CAR_ONLY"
+            android:value="false" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|density|uiMode|layoutDirection|locale"
