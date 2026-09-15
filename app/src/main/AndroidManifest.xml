@@ -29,17 +29,14 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Erebus">
         <meta-data
-            android:name="distractionOptimized"
-            android:value="true" />
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="4.0" />
-        <meta-data
             android:name="androidx.car.app.minCarApiLevel"
             android:value="7" />
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
+        <meta-data
+            android:name="androidx.car.app.NEEDS_UPDATE_IN_CAR_ONLY"
+            android:value="false" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|density|uiMode|layoutDirection|locale"
