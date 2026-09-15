@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.webkit.WebChromeClient
@@ -91,6 +92,9 @@ class MainActivity : AppCompatActivity() {
         OverlayManager(this, binding, tabManager, bookmarkManager, startPageManager, uiManager, createOverlayCallbacks()) 
     }
 
+    // Erebus Bridge Client pour la connexion au pont Wi-Fi/USB
+    private val bridgeClient = ErebusBridgeClient()
+
     private val isDebugBuild: Boolean by lazy { 
         val flags = applicationInfo.flags
         (flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0 
@@ -172,12 +176,27 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
-                binding.menuVersion.text = "v${BuildConfig.VERSION_NAME}"
+        binding.menuVersion.text = "v${BuildConfig.VERSION_NAME}"
+        
+        // Initialiser le client Erebus Bridge
+        bridgeClient.setListener(object : ErebusBridgeClient.MessageListener {
+            override fun onMessageReceived(message: String) {
+                runOnUiThread {
+                    Log.i("ErebusBridge", "Message reçu du Bridge: $message")
+                }
+            }
+            override fun onConnectionLost() {
+                runOnUiThread {
+                    Log.w("ErebusBridge", "Connexion au Bridge perdue")
+                }
+            }
+        })
+        
         setupUi()
         setupBackPressHandling()
         
         permissionManager.ensureNotificationPermissionIfNeeded(REQUEST_CODE_POST_NOTIFICATIONS)
-            }
+    }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -431,6 +450,20 @@ class MainActivity : AppCompatActivity() {
             binding.menuFab.show()
         } else {
             handler.postDelayed(showMenuFabRunnable, MENU_BUTTON_SHOW_DELAY_MS)
+        }
+    }
+
+    /**
+     * Teste la connexion au pont Erebus Bridge
+     * Appelable depuis un bouton ou une action utilisateur
+     */
+    fun testBridgeConnection() {
+        if (!bridgeClient.isConnecting()) {
+            bridgeClient.connect()
+            Toast.makeText(this, "Connexion au Bridge en cours...", Toast.LENGTH_SHORT).show()
+        } else {
+            bridgeClient.send("PING_FROM_ANDROID")
+            Toast.makeText(this, "Ping envoyé au Bridge", Toast.LENGTH_SHORT).show()
         }
     }
 
