@@ -1,6 +1,7 @@
 package com.newzura.erebus
 
 import android.content.Intent
+import android.util.Log
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.model.*
@@ -9,12 +10,17 @@ import com.newzura.erebus.data.BrowserPreferences
 class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
 
     override fun onGetTemplate(): Template {
+        Log.d("ErebusCar", "onGetTemplate called")
+        
         val bookmarks = BrowserPreferences.getBookmarks(carContext.applicationContext)
+        Log.d("ErebusCar", "Bookmarks loaded: ${bookmarks.size} items")
+        
         val listBuilder = ItemList.Builder()
         
         // Ajouter les favoris
         bookmarks.forEach { url ->
             val title = getBookmarkTitle(url)
+            Log.d("ErebusCar", "Adding bookmark: $title - $url")
             listBuilder.addItem(
                 Row.Builder()
                     .setTitle(title.ifEmpty { "Site Web" })
@@ -26,24 +32,16 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
             )
         }
         
-        // Si aucun favori, afficher des options par défaut
+        // Si aucun favori, afficher des options par défaut (comme dans la version qui fonctionnait)
         if (bookmarks.isEmpty()) {
+            Log.d("ErebusCar", "No bookmarks, showing default options")
+            
             listBuilder.addItem(
                 Row.Builder()
                     .setTitle("Ouvrir le navigateur")
                     .addText("Démarrer la navigation web")
                     .setOnClickListener {
-                        launchBrowser("https://www.google.com")
-                    }
-                    .build()
-            )
-            
-            listBuilder.addItem(
-                Row.Builder()
-                    .setTitle("YouTube")
-                    .addText("Accéder à YouTube")
-                    .setOnClickListener {
-                        launchBrowser("https://youtube.com")
+                        launchBrowser("about:blank")
                     }
                     .build()
             )
@@ -53,7 +51,7 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
                     .setTitle("Page de démarrage")
                     .addText("Afficher la page de démarrage")
                     .setOnClickListener {
-                        launchBrowser("https://www.google.com")
+                        launchBrowser("chrome://newtab")
                     }
                     .build()
             )
@@ -71,6 +69,8 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
                 }
                 .build()
         )
+        
+        Log.d("ErebusCar", "Building template with ${listBuilder.build().itemCount} items")
         
         return ListTemplate.Builder()
             .setTitle("Erebus Browser")
@@ -94,11 +94,13 @@ class MainCarScreen(private val carContext: CarContext) : Screen(carContext) {
                 else -> host.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
             }
         } catch (e: Exception) {
+            Log.e("ErebusCar", "Error parsing URL: $url", e)
             url
         }
     }
     
     private fun launchBrowser(url: String) {
+        Log.d("ErebusCar", "Launching browser with URL: $url")
         val intent = Intent(carContext, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             putExtra("CAR_LAUNCHED", true)

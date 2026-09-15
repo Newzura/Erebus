@@ -1,88 +1,55 @@
 ```
-# Compiled and build artifacts
-*.class
-*.o
-*.obj
-*.exe
-*.dll
+# Android build artifacts
+*.apk
+*.aar
+*.dex
 *.so
-*.a
-*.out
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
 *.jar
-*.war
-*.zip
-*.tar
-*.gz
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
 
-# Dependencies
-node_modules/
-venv/
-.venv/
+# Android build directories
+build/
+.gradle/
+local.properties
+captures/
+
+# IDE files
+.idea/
+*.iml
+*.iws
+.vscode/
+
+# Temp files
+*.tmp
+*.temp
+*~
+
+# Logs
+*.log
+
+# Environment
 .env
 .env.local
-.env.*
-.gradle/
-target/
-build/
-dist/
-*.egg-info/
+*.env.*
+
+# Python (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
 .tox/
 .coverage
-coverage/
-htmlcov/
-
-# IDE and editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*.tmp
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
 *.log
 .DS_Store
 Thumbs.db
-*.iml
-*.ipr
-*.iws
-.settings/
-.project
-.classpath
-.pytest_cache/
-.mypy_cache/
-.nyc_output/
-coverage.xml
-*.gcda
-*.gcno
-
-# Android specific
-*.apk
-*.aab
-local.properties
-captures/
-.externalNativeBuild/
-.gradle/
-*.keystore
-debug.keystore
 ```

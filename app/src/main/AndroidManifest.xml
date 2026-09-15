@@ -83,6 +83,9 @@
                 <action android:name="androidx.car.app.CarAppService" />
                 <category android:name="androidx.car.app.category.DEFAULT" />
             </intent-filter>
+            <meta-data
+                android:name="distractionOptimized"
+                android:value="true" />
         </service>
 
         <!-- Media Browser Service pour la projection audio -->
