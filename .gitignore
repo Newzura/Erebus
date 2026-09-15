@@ -1,14 +1,25 @@
 # Android build artifacts
-build/
-.gradle/
 *.apk
 *.aar
+*.jar
 *.dex
+*.so
 
-# Android studio
+# Android build directories
+build/
+.gradle/
+local.properties
+
+# IDE files
 .idea/
 *.iml
+*.ipr
 *.iws
+.vscode/
+
+# Temp files
+*.tmp
+*.temp
 *.log
 
 # Environment
@@ -18,219 +29,38 @@ build/
 
 # Dependencies
 node_modules/
-vendor/
+venv/
+.venv/
 
-# Logs
-*.log
-
-# OS generated files
-.DS_Store
-Thumbs.db
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-iTunes_Control.db
-Icon?
-!Icon
-*/.DS_Store
-*/Thumbs.db
-
-# Temporary files
-*.tmp
-*~
-*.swp
-*.swo
-
-# Python related (if applicable)
+# Python artifacts (if present in Android project)
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
 *.so
-.coverage
-htmlcov/
-.coverage.*
-.pytest_cache/
-.mypy_cache/
-.pyre/
-.pytype/
-cython_debug/
 
-# Java related (if applicable)
-*.class
-*.jar
-*.war
-*.ear
-*.tar.gz
+# General build artifacts
+dist/
 target/
+out/
+bin/
+obj/
+lib/
 
-# Node related (if applicable)
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# OS generated files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
 
-# Backup files
-*.bak
-*.backup
-*~
-
-# IDE specific
-.vscode/
-*.sublime-project
-*.sublime-workspace
-nbproject/
-*.launch
-.settings/
-*.tmproj
-
-# Testing
+# Coverage reports
 coverage/
-.junit/
+htmlcov/
+*.coverage
+
+# Cache directories
+.mypy_cache/
+.pytest_cache/
 .nyc_output/
-istanbul/
-.mocha.opts
-
-# Distribution / packaging
-*.tar
-*.zip
-*.gz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
-
-# CI/CD
-.github/
-.gitlab/
-
-# Secrets
-secrets/
-secret/
-*.key
-*.pem
-*.crt
-*.cert
-*.der
-*.p12
-*.pfx
-*.p7b
-*.p7r
-*.spc
-*.sst
-*.csr
-*.pub
-*.gpg
-*.asc
-*.sig
-*.sign
-*.signature
-*.keychain
-*.keyring
-*.jks
-*.keystore
-*.truststore
-*.p12
-*.pfx
-*.p7b
-*.p7r
-*.spc
-*.sst
-*.csr
-*.pub
-*.gpg
-*.asc
-*.sig
-*.sign
-*.signature
-*.keychain
-*.keyring
-*.jks
-*.keystore
-*.truststore
-
-# Local configuration
-config/local.properties
-local.properties
-gradle.properties
-*.properties
-
-# Generated files
-gen/
-generated/
-.autotools/
-.autodist/
-.autogen/
-.autoscan/
-.autoconf/
-.autom4te.cache/
-
-# Gradle
-.gradle/
-.gradle/
-!gradle/wrapper/gradle-wrapper.jar
-
-# Android specific
-captures/
-.externalNativeBuild/
-cxx/
-*.keystore
-debug.keystore
-*.ap_
-*.ap_
-*.aab
-*.apks
-*.flat
-*.abb
-*.apex
-*.capex
-*.xapk
-*.apkm
-*.xsf
-*.apksig
-*.apk.idsig
-*.apksigner
-*.bundle
-*.aab.idsig
-*.apex.idsig
-*.capex.idsig
-*.xapk.idsig
-*.apkm.idsig
-*.xsf.idsig
-*.apksig.idsig
-*.apksigner.idsig
-*.bundle.idsig
-
-# Android Studio Navigation editor temp files
-.navigation/
-
-# Android Coverage
-*.ec
-
-# Firebase Performance
-*.fir
-
-# Proguard
-proguard/
-
-# Dexguard
-dexguard/
-
-# LeakCanary
-leakcanary-file/
+coverage/lcov-report/
