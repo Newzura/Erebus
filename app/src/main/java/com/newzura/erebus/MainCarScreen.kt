@@ -7,17 +7,6 @@ import androidx.car.app.model.*
 import androidx.car.app.validation.HostValidator
 import com.newzura.erebus.data.BrowserPreferences
 
-class ErebusCarAppService : CarAppService() {
-
-    override fun createHostValidator(): HostValidator {
-        return HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
-    }
-
-    override fun onCreateSession(sessionInfo: SessionInfo): Session {
-        return MainCarSession()
-    }
-}
-
 class MainCarSession : Session() {
     override fun onCreateScreen(intent: Intent): Screen {
         val action = intent.action ?: CAR_APP_NAVIGATION_DEFAULT_ACTION
