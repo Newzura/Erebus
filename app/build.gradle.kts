@@ -2,18 +2,19 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.google.devtools.ksp)
   alias(libs.plugins.secrets)
+  id("org.jetbrains.kotlin.plugin.serialization") version "2.1.0"
 }
 
 android {
-  namespace = "com.newzura.erebus"
+  namespace = "fr.thomas.erebus"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
   defaultConfig {
-    applicationId = "com.newzura.erebus"
+    applicationId = "fr.thomas.erebus"
     minSdk = 26
     targetSdk = 36
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = 8
+    versionName = "2.2"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -43,50 +44,41 @@ android {
     }
     debug { signingConfig = signingConfigs.getByName("debugConfig") }
   }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
+
   buildFeatures {
-    compose = false
+    viewBinding = true
     buildConfig = true
-    aidl = true
   }
+
   testOptions {
     unitTests {
       isIncludeAndroidResources = true
       isReturnDefaultValues = true
     }
   }
-  dependenciesInfo {
-    includeInApk = false
-    includeInBundle = true
-  }
 }
 
-// Configure the Secrets Gradle Plugin to use .env and .env.example files
-// to match the convention used in Web projects.
 secrets {
   propertiesFileName = ".env"
   defaultPropertiesFileName = ".env.example"
-  ignoreList.add("FIREBASE_APPCHECK_DEBUG_TOKEN")
-  ignoreList.add("GEMINI_API_KEY")
 }
-
 
 dependencies {
   implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation("androidx.activity:activity-ktx:1.9.3")
   implementation(libs.androidx.appcompat)
-  implementation(libs.material)
-  implementation(libs.androidx.preference.ktx)
+  implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+  implementation("androidx.webkit:webkit:1.12.1")
+  implementation("com.google.android.material:material:1.14.0")
+  implementation("androidx.recyclerview:recyclerview:1.3.2")
   implementation(libs.androidx.car.app)
-  implementation(libs.androidx.media)
-  implementation(libs.shizuku.api)
-  implementation(libs.shizuku.provider)
-  implementation(libs.libsu.core)
-  implementation(libs.libsu.service)
-  implementation(libs.kotlinx.coroutines.android)
-  implementation(libs.kotlinx.coroutines.core)
-
-  testImplementation(libs.junit)
+  implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.14")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+  implementation("com.google.android.gms:play-services-oss-licenses:17.1.0")
 }

@@ -1,0 +1,8 @@
+fork: rebrand AABrowser as Erebus and remove telemetry
+
+- Rebranded app_name, metadata, and namespace to Erebus.
+- Changed applicationId to fr.thomas.erebus.
+- Replaced AABrowser icons with temporary Erebus "E" vector icon.
+- Kept UI structure, bookmarks, startpage, tabs, etc. intact.
+- Confirmed total removal of Umami and telemetry (0 references).
+- Replaced references to AABrowser in about/license descriptions with appropriate attribution.
