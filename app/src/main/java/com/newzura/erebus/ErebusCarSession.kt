@@ -23,7 +23,7 @@ class ErebusCarSession : Session() {
 
     override fun onCreateScreen(intent: Intent): Screen {
         ProjectionCoordinator.setCarAppConnected(true)
-        return ErebusCarScreen(carContext)
+        return MainMenuCarScreen(carContext)
     }
 }
 

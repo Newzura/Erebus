@@ -10,6 +10,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -55,6 +56,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        // Connexion YouTube
+        findPreference<Preference>("pref_login_youtube")?.setOnPreferenceClickListener {
+            openWebLoginDialog("https://accounts.google.com/ServiceLogin?service=youtube", "Connexion YouTube")
+            true
+        }
+
+        // Connexion Jellyfin
+        findPreference<Preference>("pref_login_jellyfin")?.setOnPreferenceClickListener {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            val url = prefs.getString("pref_jellyfin_url", "http://192.168.1.100:8096") ?: "http://192.168.1.100:8096"
+            openWebLoginDialog(url, "Connexion Jellyfin")
+            true
+        }
+
         // À propos
         findPreference<Preference>("pref_about_author")?.setOnPreferenceClickListener {
             AlertDialog.Builder(requireContext())
@@ -87,6 +102,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
+        // URL Jellyfin
+        findPreference<EditTextPreference>("pref_jellyfin_url")?.apply {
+            summary = text?.ifBlank { null } ?: getString(R.string.pref_jellyfin_url_summary)
+            setOnPreferenceChangeListener { _, newVal ->
+                val str = newVal as? String
+                summary = str?.ifBlank { null } ?: getString(R.string.pref_jellyfin_url_summary)
+                true
+            }
+        }
+
         updatePrivilegedStatus()
     }
 
@@ -98,5 +123,29 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun updatePrivilegedStatus() {
         findPreference<Preference>("pref_privileged_status")?.summary =
             PrivilegedManager.getActiveBackendName()
+    }
+
+    private fun openWebLoginDialog(url: String, title: String) {
+        val context = requireContext()
+        val webView = android.webkit.WebView(context).apply {
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
+            settings.databaseEnabled = true
+            val cookieManager = android.webkit.CookieManager.getInstance()
+            cookieManager.setAcceptCookie(true)
+            cookieManager.setAcceptThirdPartyCookies(this, true)
+            webViewClient = android.webkit.WebViewClient()
+            loadUrl(url)
+        }
+
+        AlertDialog.Builder(context)
+            .setTitle(title)
+            .setView(webView)
+            .setPositiveButton(R.string.dialog_login_done) { dialog, _ ->
+                android.webkit.CookieManager.getInstance().flush()
+                dialog.dismiss()
+                Toast.makeText(context, "Session enregistrée pour Android Auto", Toast.LENGTH_SHORT).show()
+            }
+            .show()
     }
 }

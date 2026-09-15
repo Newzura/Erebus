@@ -103,4 +103,22 @@
     <string name="status_sharing_denied">Partage non autorisé</string>
     <string name="accessibility_service_label">Erebus Accessibilité</string>
     <string name="accessibility_service_description">Permet d\'automatiser la validation de projection et d\'émuler les gestes tactiles reçus depuis l\'écran d\'Android Auto.</string>
+
+    <!-- YouTube & Jellyfin Integration -->
+    <string name="mode_menu">Menu principal</string>
+    <string name="mode_mirror">Miroir d\'écran</string>
+    <string name="mode_youtube">YouTube</string>
+    <string name="mode_jellyfin">Jellyfin</string>
+    <string name="action_home">Accueil</string>
+    <string name="action_back">Précédent</string>
+    <string name="action_refresh">Recharger</string>
+    <string name="pref_cat_media_services">Services Multimédia (Web &amp; Stream)</string>
+    <string name="pref_jellyfin_url_title">Adresse du serveur Jellyfin</string>
+    <string name="pref_jellyfin_url_summary">URL complète (ex: https://jellyfin.example.com)</string>
+    <string name="pref_youtube_desktop_title">Interface YouTube Bureau / Tablette</string>
+    <string name="pref_youtube_desktop_summary">Charge la version large de YouTube au lieu de la version mobile restreinte</string>
+    <string name="btn_login_youtube">Connexion YouTube (Compte Google)</string>
+    <string name="btn_login_jellyfin">Ouvrir Jellyfin (Connexion)</string>
+    <string name="dialog_login_title">Connexion de session</string>
+    <string name="dialog_login_done">Fermer</string>
 </resources>

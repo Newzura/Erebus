@@ -1,14 +1,13 @@
 package com.newzura.erebus
 
 import android.app.Activity
-import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.media.projection.MediaProjectionConfig
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
@@ -56,12 +55,15 @@ class ProjectionConsentActivity : Activity() {
             return
         }
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val singleApp = prefs.getBoolean("pref_single_app", false)
+        if (ProjectionCoordinator.forceLandscapePreference.value) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        }
 
-        val captureIntent = mediaProjectionManager.createScreenCaptureIntent()
-        if (singleApp) {
-            attachSingleAppLaunchCookie(captureIntent)
+        val captureIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val config = MediaProjectionConfig.createConfigForDefaultDisplay()
+            mediaProjectionManager.createScreenCaptureIntent(config)
+        } else {
+            mediaProjectionManager.createScreenCaptureIntent()
         }
 
         try {
@@ -148,31 +150,6 @@ class ProjectionConsentActivity : Activity() {
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Échec du lancement de l'application cible: $autoLaunchPkg", e)
-            }
-        }
-    }
-
-    private fun attachSingleAppLaunchCookie(captureIntent: Intent) {
-        if (Build.VERSION.SDK_INT >= 35) {
-            try {
-                val options = ActivityOptions.makeBasic()
-                val getCookieMethod = options.javaClass.methods.firstOrNull { it.name == "getLaunchCookie" }
-                val cookie = getCookieMethod?.invoke(options)
-                if (cookie is Parcelable) {
-                    captureIntent.putExtra("android.media.projection.extra.EXTRA_LAUNCH_COOKIE", cookie)
-                    Log.i(TAG, "M2: LaunchCookie attaché pour mirroring mono-app (SDK 35+)")
-                } else {
-                    val cookieClass = Class.forName("android.app.ActivityOptions\$LaunchCookie")
-                    val ctor = cookieClass.declaredConstructors.firstOrNull { it.parameterTypes.isEmpty() }
-                    ctor?.isAccessible = true
-                    val newCookie = ctor?.newInstance() as? Parcelable
-                    if (newCookie != null) {
-                        captureIntent.putExtra("android.media.projection.extra.EXTRA_LAUNCH_COOKIE", newCookie)
-                        Log.i(TAG, "M2: LaunchCookie construit et attaché")
-                    }
-                }
-            } catch (e: Exception) {
-                Log.w(TAG, "M2: Impossible de créer LaunchCookie mono-app: ${e.message}")
             }
         }
     }

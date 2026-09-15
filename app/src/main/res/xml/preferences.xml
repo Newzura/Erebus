@@ -58,12 +58,34 @@
             app:title="@string/pref_auto_launch_app_title"
             app:summary="@string/pref_auto_launch_app_summary"
             app:dialogTitle="@string/pref_auto_launch_app_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_media_services"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            app:key="pref_jellyfin_url"
+            app:title="@string/pref_jellyfin_url_title"
+            app:summary="@string/pref_jellyfin_url_summary"
+            app:dialogTitle="URL Jellyfin"
+            app:defaultValue="http://192.168.1.100:8096" />
 
         <SwitchPreferenceCompat
-            app:key="pref_single_app"
-            app:title="@string/pref_single_app_title"
-            app:summary="@string/pref_single_app_summary"
-            app:defaultValue="false" />
+            app:key="pref_youtube_desktop"
+            app:title="@string/pref_youtube_desktop_title"
+            app:summary="@string/pref_youtube_desktop_summary"
+            app:defaultValue="true" />
+
+        <Preference
+            app:key="pref_login_youtube"
+            app:title="@string/btn_login_youtube"
+            app:summary="Se connecter à votre compte YouTube Premium sur ce téléphone" />
+
+        <Preference
+            app:key="pref_login_jellyfin"
+            app:title="@string/btn_login_jellyfin"
+            app:summary="Se connecter à votre serveur Jellyfin sur ce téléphone" />
     </PreferenceCategory>
 
     <PreferenceCategory
